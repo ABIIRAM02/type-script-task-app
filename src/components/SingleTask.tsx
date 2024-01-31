@@ -15,6 +15,7 @@ interface Props {
 const SingleTask: React.FC<Props> = ({ data, todo, setTodo }) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [editInput, setEditInput] = useState<string>(data.task);
+  const [editId, setEditId] = useState<number>();
 
   const handleOnDelete = (id: number) => {
     const newData = todo.filter((data) => data.id !== id);
@@ -28,25 +29,37 @@ const SingleTask: React.FC<Props> = ({ data, todo, setTodo }) => {
     setTodo(newData);
   };
 
+ const handleEditBegin = (id:number) => {
+    setEditId(id)
+    setIsEdit(true)
+ }
+
   const handleOnEdit = (e: React.FormEvent, id: number) => {
+
     e.preventDefault();
+    
+    // const index = todo.findIndex(data => data.id === id)
+    // const updatedTodos = [...todo]
+    // updatedTodos[index] = { ...updatedTodos[index] , task :editInput }
+    // setTodo(updatedTodos)
 
     setTodo(
       todo.map((data) => (data.id === id ? { ...data, task: editInput } : data))
     );
     setIsEdit(false);
+
   };
 
   return (
-    <div className="bg-myYellow w-2/3 rounded-xl overflow-hidden h-[8rem] flex flex-col items-center ">
+    <div className="bg-myYellow w-4/5 md:w-2/3 rounded-xl overflow-hidden h-[8rem] flex flex-col items-center ">
       {data.isDone ? (
         <del className="line-clamp-2 overflow-hidden my-auto text-center p-1 font-semibold">
           {data.task}
         </del>
-      ) : isEdit ? (
+      ) : (isEdit && (editId === data.id)) ? (
         <form className="my-auto" onSubmit={(e) => handleOnEdit(e, data.id)}>
           <input
-            defaultValue={editInput}
+            defaultValue={data.task}
             onChange={(e) => {
               setEditInput(e.target.value);
             }}
@@ -61,7 +74,7 @@ const SingleTask: React.FC<Props> = ({ data, todo, setTodo }) => {
         </h2>
       )}
       <div className="flex justify-evenly mt-auto w-full bg-red-300 p-2 text-xl text-gray-600">
-        {isEdit
+        {(isEdit && (editId === data.id))
           ? !data.isDone && (
               <BsJournalCheck
                 className="cursor-pointer"
@@ -70,7 +83,7 @@ const SingleTask: React.FC<Props> = ({ data, todo, setTodo }) => {
             )
           : !data.isDone && (
               <MdOutlineModeEdit
-                onClick={() => setIsEdit(true)}
+                onClick={() => handleEditBegin(data.id)}
                 className="cursor-pointer"
               />
             )}

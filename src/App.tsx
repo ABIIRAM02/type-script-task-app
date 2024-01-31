@@ -19,7 +19,7 @@ const App:React.FC = () => {
   } 
 
   return (
-    <div className='bg-myBlue w-full h-screen overflow-hidden flex flex-col items-center' >
+    <div className='bg-myBlue w-full h-screen overflow-y-auto pb-[1rem] md:pb-0 md:overflow-hidden flex flex-col items-center' >
         <h2 className='text-7xl tracking-wide text-blue-600 font-head'>Taskify</h2>
       <section className='font-body w-full' >
         <InputField task={task} setTask={setTask} handleSubmit={handleSubmit}/>
